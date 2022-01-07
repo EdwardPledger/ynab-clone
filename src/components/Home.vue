@@ -39,6 +39,9 @@ export default defineComponent({
   setup() {
     
   },
+  props: {
+    totalAmount: Number
+  },
   methods: {
     addRow() {
       const table = document.getElementById("budgetTable");
@@ -50,6 +53,8 @@ export default defineComponent({
       categoryCell.innerHTML = "Input category";
       budgetCell.innerHTML = 'Input budget';
       spentCell.innerHTML = '0';
+
+      spentCell.addEventListener('change', this.updateTotalAmount);
     },
     saveBudget() {
       // Get the total amount
@@ -102,9 +107,28 @@ export default defineComponent({
         const csvContent = fileReader.result;
         const csvContentArray = csvContent.split(/\n/);
         
+        // Attach values to budget amount and budget table
         document.getElementById("totalBudget").value = csvContentArray[0];
+
+        const table = document.getElementById("budgetTable");
+
+        // Fist line is the budget amount and last line is an exta new line
+        for (var i = 1; i < csvContentArray.length - 1; i++) {
+          const rowData = csvContentArray[i].split(',');
+
+          const row = table.insertRow(1);
+          row.insertCell(0).innerHTML = rowData[0];
+          row.insertCell(1).innerHTML = rowData[1];
+          row.insertCell(2).innerHTML = rowData[2];
+        }
       }
+
       fileReader.onerror = () => console.log(fileReader.error);
+    },
+    updateTotalAmount() {
+      let totalBudget = document.getElementById("totalBudget").value;
+      totalBudget -= 100;
+      document.getElementById("totalBudget").value = totalBudget;
     }
   }
 })
