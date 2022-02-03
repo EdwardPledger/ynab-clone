@@ -1,3 +1,7 @@
+DEPRACATED. 
+
+REFER TO budget-project
+
 # ynab
 
 ## Project setup
